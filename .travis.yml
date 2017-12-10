@@ -7,5 +7,5 @@ before_install:
   - docker run -itd --name build engelphi/docker-cpp-image
   - docker exec build git clone https://github.com/engelphi/algorithm.git
 script:
-  - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ && make'
-  - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
+  - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++'
+  - docker exec build sh -c 'cd algorithm/build && make algorithm_coverage'
