@@ -6,11 +6,13 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -g -O0 --coverage -fprofile-arcs -ftest-coverage")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -g -O0 -ftest-coverage --coverage")
+set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -g -O0 -ftest-coverage --coverage")
+set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} -g -O0 -ftest-coverage --coverage")
 
 
 include(CodeCoverage)
-setup_target_for_coverage(${PROJECT_NAME}_coverage test-algorithm coverage) 
+setup_target_for_coverage(${PROJECT_NAME}_coverage test-algorithm lcov) 
 
 find_package (Threads REQUIRED)
 include (ExternalProject)
