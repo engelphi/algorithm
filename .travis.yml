@@ -1,16 +1,42 @@
 sudo: required
 language: cpp
-env:
-  - ci_env=`(curl -s https://codecov.io/env) | bash`
+dist: trusty
 services:
   - docker
-before_install:
+before_script:
   - docker pull engelphi/docker-cpp-image:latest
+env:
+  global:
+    - ci_env=`(curl -s https://codecov.io/env) | bash`
+
+
+matrix:
+  include:
+  # static analysis
+  - os: linux
+    script:
+    - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_TIDY=ON'
+    - docker exec build sh -c 'cd algorithm/build && make tidy'
+  # test coverage
+  - os: linux
+    script:
+    - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON'
+    - docker exec build sh -c 'cd algorithm/build && make algorithm_coverage'
+    - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info || echo "Codecov did not collect coverage reports"'
+  # regular build
+  - os: linux
+    script:
+    - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release'
+    - docker exec build sh -c 'cd algorithm/build && make'
+    - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
+
+    before_install:
   - docker run $ci_env -itd --name build engelphi/docker-cpp-image
   - docker exec build git clone https://github.com/engelphi/algorithm.git
-script:
-  - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++'
-  - docker exec build sh -c 'cd algorithm/build && make'
-after_success:
-  - docker exec build sh -c 'cd algorithm/build && make algorithm_coverage'
-  - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info || echo "Codecov did not collect coverage reports"'
+

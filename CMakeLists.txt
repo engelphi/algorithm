@@ -6,13 +6,65 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -g -O0 -ftest-coverage --coverage")
-set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -g -O0 -ftest-coverage --coverage")
-set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} -g -O0 -ftest-coverage --coverage")
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set (CXX_COMPILER_WARNING_FLAGS "-Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wold-style-cast -Wcast-align")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wunused -Woverloaded-virtual")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wpedantic -Wconversion")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wsign-conversion")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wmisleading-indentation")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-cond")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-bracnhes -Wlogical-op")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wnull-dereference -Wuseless-cast")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wdouble-promotion -Wformat=2")
+set (COVERAGE_FLAGS "-g -O0 -ftest-coverage --coverage")
 
-include(CodeCoverage)
-setup_target_for_coverage(${PROJECT_NAME}_coverage test-algorithm lcov) 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_WARNING_FLAGS}")
+set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_WARNING_FLAGS}")
+set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS}")
+
+#---------------------------------------------------------------------------------------------------
+# Clang Tidy
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_CLANG_TIDY)
+  find_program(CLANG_TIDY_BIN clang-tidy)
+
+  if (CLANG_TIDY_BIN STREQUAL "CLANG_TIDY_BIN-NOTFOUND")
+    message(FATAL_ERROR "unable to locate clang-tidy")
+  endif()
+
+  list(APPEND CLANG_TIDY_BIN_ARGS
+    -header-filter=${PROJECT_SOURCE_DIR}/include/*.hpp
+    -checks=performance-*,clang-analyzer-*,cppcoreguidelines-*,modernize-*,readability-*
+  )
+
+  add_custom_target(
+    tidy
+    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/*.hpp -- ${CMAKE_CXX_FLAGS}
+    COMMENT "running clang tidy"
+  )
+endif()
+
+#---------------------------------------------------------------------------------------------------
+# Coverage
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_COVERAGE)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_FLAGS}")
+  set (CMAKE_CC_FLAGS "${CMAKE_CC_FLAGS} ${COVERAGE_FLAGS}")
+  set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${COVERAGE_FLAGS}")
+  include(CodeCoverage)
+  setup_target_for_coverage(${PROJECT_NAME}_coverage test-algorithm lcov)
+endif()
+
+#---------------------------------------------------------------------------------------------------
+# Release Build
+#---------------------------------------------------------------------------------------------------
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+  set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+endif()
+
 
 find_package (Threads REQUIRED)
 include (ExternalProject)
