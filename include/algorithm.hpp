@@ -17,4 +17,4 @@ OutputIterator transform_if(InputIterator first, InputIterator last,
   return d_first;
 }
 
-}  // namespace algo
+} // namespace algo

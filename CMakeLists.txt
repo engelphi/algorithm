@@ -47,6 +47,29 @@ if (ENABLE_CLANG_TIDY)
 endif()
 
 #---------------------------------------------------------------------------------------------------
+# Clang Format
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_CLANG_FORMAT)
+  find_program(CLANG_FORMAT_BIN clang-format)
+
+  if (CLANG_FORMAT_BIN STREQUAL "CLANG_FORMAT_BIN-NOTFOUND")
+    message(FATAL_ERROR "unable to locate clang-format")
+  endif()
+
+  list(APPEND CLANG_FORMAT_BIN_ARGS
+    -style=file
+    -i
+  )
+
+  add_custom_target(
+    format
+    COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/*.hpp --
+    COMMENT "running clang tidy"
+  )
+endif()
+
+
+#---------------------------------------------------------------------------------------------------
 # Coverage
 #---------------------------------------------------------------------------------------------------
 if (ENABLE_COVERAGE)
