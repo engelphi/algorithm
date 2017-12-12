@@ -14,6 +14,7 @@ matrix:
   include:
   # format
   - os: linux
+    env: STEP=FORMAT_CHECK
     script:
     - docker run $ci_env -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
@@ -22,13 +23,33 @@ matrix:
     - docker exec build bash -c 'cd algorithm && rm -r build && [ $(git diff --shortstat | wc -l) == 0 ] && echo "success"'
   # static analysis
   - os: linux
+    env: STEP=STATIC_ANALYSIS
     script:
     - docker run $ci_env -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
     - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_TIDY=ON'
     - docker exec build sh -c 'cd algorithm/build && make tidy'
+  # address sanitizer
+  - os: linux
+    env: STEP=ADDRESS_SANITIZER
+    script:
+    - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_ASAN=ON'
+    - docker exec build sh -c 'cd algorithm/build && make'
+    - docker exec build sh -c 'cd algorithm/build && ASAN_OPTIONS=check_initialization_order=1 ./test-algorithm'
+  # memory sanitizer
+  #- os: linux
+  #  env: STEP=MEMORY_SANITIZER
+  #  script:
+  #  - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+  #  - docker exec build git clone https://github.com/engelphi/algorithm.git
+  #  - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_MSAN=ON'
+  #  - docker exec build sh -c 'cd algorithm/build && make'
+  #  - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
   # test coverage
   - os: linux
+    env: STEP=COVERAGE
     script:
     - docker run $ci_env -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
@@ -37,6 +58,7 @@ matrix:
     - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info || echo "Codecov did not collect coverage reports"'
   # regular build
   - os: linux
+    env: STEP=TEST
     script:
     - docker run $ci_env -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git

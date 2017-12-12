@@ -18,7 +18,11 @@ set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-cond
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-bracnhes -Wlogical-op")
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wnull-dereference -Wuseless-cast")
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wdouble-promotion -Wformat=2")
-set (COVERAGE_FLAGS "-g -O0 -ftest-coverage --coverage")
+set (CXX_COMPILER_DEBUG_FLAGS "-g -O0")
+set (CXX_COMPILER_RELEASE_FLAGS "-O2")
+set (CXX_COMPILER_ASAN_FLAGS "${CXX_COMPILER_RELEASE_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+set (CXX_COMPILER_MSAN_FLAGS "${CXX_COMPILER_RELEASE_FLAGS} -fsanitize=memory -fno-omit-frame-pointer")
+set (COVERAGE_FLAGS "${CXX_COMPILER_DEBUG_FLAGS} -ftest-coverage --coverage")
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_WARNING_FLAGS}")
 set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_WARNING_FLAGS}")
@@ -81,11 +85,39 @@ if (ENABLE_COVERAGE)
 endif()
 
 #---------------------------------------------------------------------------------------------------
+# Address Sanitizer
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_ASAN)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_ASAN_FLAGS}")
+  set (CMAKE_CC_FLAGS "${CMAKE_CC_FLAGS} ${CXX_COMPILER_ASAN_FLAGS}")
+  set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${CXX_COMPILER_ASAN_FLAGS}")
+  set (CMAKE_LINKER "clang++")
+endif()
+
+#---------------------------------------------------------------------------------------------------
+# Memory Sanitizer
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_MSAN)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_MSAN_FLAGS}")
+  set (CMAKE_CC_FLAGS "${CMAKE_CC_FLAGS} ${CXX_COMPILER_MSAN_FLAGS}")
+  set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${CXX_COMPILER_MSAN_FLAGS}")
+  set (CMAKE_LINKER "clang++")
+endif()
+
+#---------------------------------------------------------------------------------------------------
+# Debug Build
+#---------------------------------------------------------------------------------------------------
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_DEBUG_FLAGS}")
+  set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_DEBUG_FLAGS}")
+endif()
+
+#---------------------------------------------------------------------------------------------------
 # Release Build
 #---------------------------------------------------------------------------------------------------
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-  set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_RELEASE_FLAGS}")
+  set (CMAKE_CC_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILER_RELEASE_FLAGS}")
 endif()
 
 
