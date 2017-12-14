@@ -21,6 +21,13 @@ matrix:
     - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_FORMAT=ON'
     - docker exec build sh -c 'cd algorithm/build && make format'
     - docker exec build bash -c 'cd algorithm && rm -r build && [ $(git diff --shortstat | wc -l) == 0 ] && echo "success"'
+  # documentation
+  - os: linux
+    env: STEP=documentation
+    script:
+    - docker run $ci_env -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && doxygen doxygen.conf'
   # static analysis
   - os: linux
     env: STEP=STATIC_ANALYSIS
