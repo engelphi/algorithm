@@ -27,7 +27,7 @@ matrix:
     script:
     - docker run $ci_env -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && doxygen doxygen.conf'
+    - docker exec build sh -c 'cd algorithm && ls -ahl && doxygen'
   # static analysis
   - os: linux
     env: STEP=STATIC_ANALYSIS
