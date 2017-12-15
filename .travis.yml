@@ -1,6 +1,9 @@
 sudo: required
 language: cpp
 dist: trusty
+branches:
+  only:
+    - master
 services:
   - docker
 before_script:
