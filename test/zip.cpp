@@ -1,4 +1,4 @@
-#include <algorithm.hpp>
+#include <algorithms/algorithm.hpp>
 #include <deque>
 #include <forward_list>
 #include <gtest/gtest.h>

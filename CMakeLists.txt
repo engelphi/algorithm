@@ -45,7 +45,7 @@ if (ENABLE_CLANG_TIDY)
 
   add_custom_target(
     tidy
-    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/*.hpp -- ${CMAKE_CXX_FLAGS}
+    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp -- ${CMAKE_CXX_FLAGS}
     COMMENT "running clang tidy"
   )
 endif()
@@ -67,8 +67,8 @@ if (ENABLE_CLANG_FORMAT)
 
   add_custom_target(
     format
-    COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/*.hpp --
-    COMMENT "running clang tidy"
+    COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp --
+    COMMENT "running clang format"
   )
 endif()
 
