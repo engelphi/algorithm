@@ -46,7 +46,7 @@ if (ENABLE_CLANG_TIDY)
   add_custom_target(
     tidy
     COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp -- ${CMAKE_CXX_FLAGS}
-    COMMENT "running clang tidy"
+    COMMENT "running clang-tidy"
   )
 endif()
 
@@ -68,10 +68,35 @@ if (ENABLE_CLANG_FORMAT)
   add_custom_target(
     format
     COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp --
-    COMMENT "running clang format"
+    COMMENT "running clang-format"
   )
 endif()
 
+#---------------------------------------------------------------------------------------------------
+# CppCheck
+#---------------------------------------------------------------------------------------------------
+if (ENABLE_CPP_CHECK)
+  find_program(CPP_CHECK_BIN cppcheck)
+  if (CPP_CHECK_BIN STREQUAL "CPP_CHECK_BIN-NOTFOUND")
+    message(FATAL_ERROR "unable to locate cppcheck")
+  endif()
+
+  list(APPEND CPP_CHECK_BIN_ARGS
+    --error-exitcode=1
+    --enable=all
+    --report-progress
+    --platform=unix64
+    --std=c++11 
+    -I ${PROJECT_SOURCE_DIR}/include/
+    -q
+  )
+
+  add_custom_target(
+    cppcheck
+    COMMAND ${CPP_CHECK_BIN} ${CPP_CHECK_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp
+    COMMENT "running cppcheck"
+  )
+endif()
 
 #---------------------------------------------------------------------------------------------------
 # Coverage

@@ -35,13 +35,21 @@ matrix:
     - docker exec build sh -c 'cd algorithm && ls -ahl && doxygen'
   # static analysis
   - os: linux
-    env: STEP=STATIC_ANALYSIS
+    env: STEP=CLANG_TIDY
     script:
     - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
     - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
     - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_TIDY=ON'
     - docker exec build sh -c 'cd algorithm/build && make tidy'
+  - os: linux
+    env: STEP=CPPCHECK
+    script:
+    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CPP_CHECK=ON'
+    - docker exec build sh -c 'cd algorithm/build && make cppcheck'
   # address sanitizer
   - os: linux
     env: STEP=ADDRESS_SANITIZER
