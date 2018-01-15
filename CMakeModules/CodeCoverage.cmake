@@ -149,7 +149,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 		  # Capturing lcov counters and generating report
    
       COMMAND ${LCOV_PATH} --directory . --gcov-tool ${PROJECT_SOURCE_DIR}/llvm-gcov.sh --capture --output-file ${coverage_info}
-      COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' --output-file ${coverage_cleaned}
+      COMMAND ${LCOV_PATH} --remove ${coverage_info} '${PROJECT_SOURCE_DIR}/test/*' '/usr/*' '${PROJECT_SOURCE_DIR}/catch/*' --output-file ${coverage_cleaned}
 		  COMMAND ${GENHTML_PATH} -o ${_outputname} ${coverage_cleaned}
       #COMMAND ${CMAKE_COMMAND} -E remove ${coverage_info} ${coverage_cleaned}
 
@@ -168,7 +168,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 		  # Capturing lcov counters and generating report
    
       COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
-      COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' --output-file ${coverage_cleaned}
+      COMMAND ${LCOV_PATH} --remove ${coverage_info} '${PROJECT_SOURCE_DIR}/test/*' '/usr/*' '${PROJECT_SOURCE_DIR}/catch/*' --output-file ${coverage_cleaned}
       COMMAND ${GENHTML_PATH} -o ${_outputname} ${coverage_cleaned}
       COMMAND ${CMAKE_COMMAND} -E remove ${coverage_info} ${coverage_cleaned}
 
