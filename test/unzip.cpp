@@ -1,11 +1,11 @@
 #include <algorithms/algorithm.hpp>
+#include <catch.hpp>
 #include <deque>
 #include <forward_list>
-#include <gtest/gtest.h>
 #include <list>
 #include <vector>
 
-TEST(unzip, should_unzip_elements_from_a_vector_to_vectors) {
+TEST_CASE("unzip should unzip elements from a vector to vectors", "[unzip]") {
     std::vector<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::vector<int> expected_first_range{1, 2, 3, 4, 5};
@@ -14,11 +14,11 @@ TEST(unzip, should_unzip_elements_from_a_vector_to_vectors) {
     std::vector<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_vector_to_lists) {
+TEST_CASE("unzip should unzip elements from a vector to lists", "[unzip]") {
     std::vector<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::list<int> expected_first_range{1, 2, 3, 4, 5};
@@ -27,11 +27,11 @@ TEST(unzip, should_unzip_elements_from_a_vector_to_lists) {
     std::list<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_vector_to_deques) {
+TEST_CASE("unzip should unzip elements from a vector to deques", "[unzip]") {
     std::vector<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::deque<int> expected_first_range{1, 2, 3, 4, 5};
@@ -40,11 +40,11 @@ TEST(unzip, should_unzip_elements_from_a_vector_to_deques) {
     std::deque<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_list_to_vectors) {
+TEST_CASE("unzip should unzip elements from a list to vectors", "[unzip]") {
     std::list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::vector<int> expected_first_range{1, 2, 3, 4, 5};
@@ -53,11 +53,11 @@ TEST(unzip, should_unzip_elements_from_a_list_to_vectors) {
     std::vector<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_list_to_lists) {
+TEST_CASE("unzip should unzip elements from a list to lists", "[unzip]") {
     std::list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::list<int> expected_first_range{1, 2, 3, 4, 5};
@@ -66,11 +66,11 @@ TEST(unzip, should_unzip_elements_from_a_list_to_lists) {
     std::list<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_list_to_deques) {
+TEST_CASE("unzip should unzip elements from a list to deques", "[unzip]") {
     std::list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::deque<int> expected_first_range{1, 2, 3, 4, 5};
@@ -79,11 +79,12 @@ TEST(unzip, should_unzip_elements_from_a_list_to_deques) {
     std::deque<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_forward_list_to_vectors) {
+TEST_CASE("unzip should unzip elements from a forward_list to vectors",
+          "[unzip]") {
     std::forward_list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::vector<int> expected_first_range{1, 2, 3, 4, 5};
@@ -92,11 +93,12 @@ TEST(unzip, should_unzip_elements_from_a_forward_list_to_vectors) {
     std::vector<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_forward_list_to_lists) {
+TEST_CASE("unzip should unzip elements from a forward_list to lists",
+          "[unzip]") {
     std::forward_list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::list<int> expected_first_range{1, 2, 3, 4, 5};
@@ -105,11 +107,12 @@ TEST(unzip, should_unzip_elements_from_a_forward_list_to_lists) {
     std::list<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_forward_list_to_deques) {
+TEST_CASE("unzip should unzip elements from a forward list to deques",
+          "[unzip]") {
     std::forward_list<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::deque<int> expected_first_range{1, 2, 3, 4, 5};
@@ -118,11 +121,11 @@ TEST(unzip, should_unzip_elements_from_a_forward_list_to_deques) {
     std::deque<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_deque_to_vectors) {
+TEST_CASE("unzip should unzip elements from a deque to vectors", "[unzip]") {
     std::deque<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::vector<int> expected_first_range{1, 2, 3, 4, 5};
@@ -131,11 +134,11 @@ TEST(unzip, should_unzip_elements_from_a_deque_to_vectors) {
     std::vector<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_deque_to_lists) {
+TEST_CASE("unzip should unzip elements from a deque to lists", "[unzip]") {
     std::deque<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::list<int> expected_first_range{1, 2, 3, 4, 5};
@@ -144,11 +147,11 @@ TEST(unzip, should_unzip_elements_from_a_deque_to_lists) {
     std::list<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
 
-TEST(unzip, should_unzip_elements_from_a_deque_to_deques) {
+TEST_CASE("unzip should unzip elements from a deque to deques", "[unzip]") {
     std::deque<std::pair<int, char>> input{
         {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}, {5, 'e'}};
     std::deque<int> expected_first_range{1, 2, 3, 4, 5};
@@ -157,6 +160,6 @@ TEST(unzip, should_unzip_elements_from_a_deque_to_deques) {
     std::deque<char> second_range{};
     algo::unzip(input.begin(), input.end(), std::back_inserter(first_range),
                 std::back_inserter(second_range));
-    ASSERT_EQ(expected_first_range, first_range);
-    ASSERT_EQ(expected_second_range, second_range);
+    REQUIRE(expected_first_range == first_range);
+    REQUIRE(expected_second_range == second_range);
 }
