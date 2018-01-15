@@ -78,7 +78,7 @@ matrix:
     - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
     - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON'
     - docker exec build sh -c 'cd algorithm/build && make algorithm_coverage'
-    - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info || echo "Codecov did not collect coverage reports"'
+    - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info.cleaned || echo "Codecov did not collect coverage reports"'
   # regular build
   - os: linux
     env: STEP=TEST
