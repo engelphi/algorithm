@@ -13,10 +13,7 @@ set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wold-style-cast 
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wunused -Woverloaded-virtual")
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wpedantic -Wconversion")
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wsign-conversion")
-set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wmisleading-indentation")
-set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-cond")
-set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wduplicated-bracnhes -Wlogical-op")
-set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wnull-dereference -Wuseless-cast")
+set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wnull-dereference")
 set (CXX_COMPILER_WARNING_FLAGS "${CXX_COMPILER_WARNING_FLAGS} -Wdouble-promotion -Wformat=2")
 set (CXX_COMPILER_DEBUG_FLAGS "-g -O0")
 set (CXX_COMPILER_RELEASE_FLAGS "-O2")
@@ -45,7 +42,7 @@ if (ENABLE_CLANG_TIDY)
 
   add_custom_target(
     tidy
-    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp -- ${CMAKE_CXX_FLAGS}
+    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp -- -std=c++17 ...
     COMMENT "running clang-tidy"
   )
 endif()
