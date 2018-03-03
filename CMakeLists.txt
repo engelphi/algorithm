@@ -36,13 +36,13 @@ if (ENABLE_CLANG_TIDY)
   endif()
 
   list(APPEND CLANG_TIDY_BIN_ARGS
-    -header-filter=${PROJECT_SOURCE_DIR}/include/*.hpp
+    -header-filter=${PROJECT_SOURCE_DIR}/*.hpp
     -checks=performance-*,clang-analyzer-*,cppcoreguidelines-*,modernize-*,readability-*
   )
 
   add_custom_target(
     tidy
-    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp -- -std=c++17 ...
+    COMMAND ${CLANG_TIDY_BIN} ${CLANG_TIDY_BIN_ARGS} ${PROJECT_SOURCE_DIR}/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/algorithms/internal/*.hpp -- -std=c++17 ...
     COMMENT "running clang-tidy"
   )
 endif()
@@ -64,7 +64,7 @@ if (ENABLE_CLANG_FORMAT)
 
   add_custom_target(
     format
-    COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp --
+    COMMAND ${CLANG_FORMAT_BIN} ${CLANG_FORMAT_BIN_ARGS} ${PROJECT_SOURCE_DIR}/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/algorithms/internal/*.hpp --
     COMMENT "running clang-format"
   )
 endif()
@@ -90,7 +90,7 @@ if (ENABLE_CPP_CHECK)
 
   add_custom_target(
     cppcheck
-    COMMAND ${CPP_CHECK_BIN} ${CPP_CHECK_BIN_ARGS} ${PROJECT_SOURCE_DIR}/include/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/include/algorithms/internal/*.hpp
+    COMMAND ${CPP_CHECK_BIN} ${CPP_CHECK_BIN_ARGS} ${PROJECT_SOURCE_DIR}/algorithms/*.hpp ${PROJECT_SOURCE_DIR}/algorithms/internal/*.hpp
     COMMENT "running cppcheck"
   )
 endif()
@@ -147,10 +147,10 @@ find_package (Threads REQUIRED)
 include (ExternalProject)
 
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch)
-
+set(ALGORITHMS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/algorithms)
 add_library (algorithm INTERFACE)
 add_library(Catch INTERFACE)
-target_include_directories (algorithm INTERFACE include/)
+target_include_directories (algorithm INTERFACE ${ALGORITHMS_INCLUDE_DIR})
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 file (GLOB SRCS test/*.cpp)
