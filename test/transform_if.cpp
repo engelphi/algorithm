@@ -1,4 +1,4 @@
-#include <algorithms/algorithm.hpp>
+#include <algorithm.hpp>
 #include <catch.hpp>
 #include <deque>
 #include <forward_list>

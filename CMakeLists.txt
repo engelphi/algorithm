@@ -147,10 +147,10 @@ find_package (Threads REQUIRED)
 include (ExternalProject)
 
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch)
-
+set(ALGORITHMS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/algorithms)
 add_library (algorithm INTERFACE)
 add_library(Catch INTERFACE)
-target_include_directories (algorithm INTERFACE include/)
+target_include_directories (algorithm INTERFACE ${ALGORITHMS_INCLUDE_DIR})
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 file (GLOB SRCS test/*.cpp)
