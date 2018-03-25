@@ -75,13 +75,23 @@ matrix:
       > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f
       lcov.info.cleaned || echo "Codecov did not collect coverage reports"'
   - os: linux
-    env: STEP=TEST
+    env: STEP=TEST_CLANG
     script:
     - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
     - docker exec build git clone https://github.com/engelphi/algorithm.git
     - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
     - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
       -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release'
+    - docker exec build sh -c 'cd algorithm/build && make'
+    - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
+  - os: linux
+    env: STEP=TEST_GCC
+    script:
+    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
+    - docker exec build git clone https://github.com/engelphi/algorithm.git
+    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
+    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
+      -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release'
     - docker exec build sh -c 'cd algorithm/build && make'
     - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
 
