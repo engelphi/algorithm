@@ -14,7 +14,7 @@ testing that the library works as expected.
 
 ### Requirements
 
-- C++17 compiler (clang5 is currently used for testing)
+- C++17 compiler (clang6 and g++ 7.3.0 are currently used for building and testing)
 - cmake 3.9 for building
 - clang-format && clang-tidy for formatting and static analysis
 - doxygen for building the documentation
