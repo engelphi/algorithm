@@ -1,5 +1,8 @@
-#include <algorithm.hpp>
 #include <catch.hpp>
+
+#include <internal/zip_with.hpp>
+
+#include <array>
 #include <deque>
 #include <forward_list>
 #include <list>

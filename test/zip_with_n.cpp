@@ -1,7 +1,8 @@
-#include <algorithm.hpp>
+#include <array>
 #include <catch.hpp>
 #include <deque>
 #include <forward_list>
+#include <internal/zip_with_n.hpp>
 #include <list>
 #include <vector>
 
