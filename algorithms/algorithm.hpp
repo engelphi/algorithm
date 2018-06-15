@@ -2,6 +2,7 @@
  * @file algorithm.hpp
  */
 #pragma once
+#include "internal/intersperse.hpp"
 #include "internal/transform_if.hpp"
 #include "internal/unzip.hpp"
 #include "internal/zip.hpp"
