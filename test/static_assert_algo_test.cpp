@@ -1,5 +1,6 @@
 #include <catch.hpp>
 
+#include "internal/intersperse.hpp"
 #include "internal/span.hpp"
 #include "internal/transform_if.hpp"
 #include "internal/unzip.hpp"
@@ -100,6 +101,32 @@ constexpr inline bool testSpanAlgo() {
 
 TEST_CASE("span works in constexpr context", "[constexpr]") {
     constexpr bool res = testSpanAlgo();
+    static_assert(res);
+    REQUIRE(res == true);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+constexpr inline bool testIntersperseAlgo() {
+    std::array<int, 10> input{{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
+    int separator = 0;
+    std::array<int, 19> expected{
+        {1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10}};
+
+    int out[19] = {0};
+    int *out_to = out;
+
+    algo::intersperse(input.begin(), input.end(), out_to, separator);
+
+    bool res = true;
+    for (unsigned i = 0; i < 19; i++) {
+        res = res && (expected[i] == out[i]);
+    }
+    return res;
+}
+
+TEST_CASE("intersperse works in constexpr context", "[constexpr]") {
+    constexpr bool res = testIntersperseAlgo();
     static_assert(res);
     REQUIRE(res == true);
 }

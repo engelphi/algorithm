@@ -4,8 +4,8 @@ namespace algo {
 
 namespace detail {
 template <typename ForwardIterator, typename OutputIterator, typename T>
-void prepend_to_all(ForwardIterator first, ForwardIterator last,
-                    OutputIterator d_first, T sep) {
+constexpr void prepend_to_all(ForwardIterator first, ForwardIterator last,
+                              OutputIterator d_first, T sep) {
     while (first != last) {
         *d_first++ = sep;
         *d_first++ = *first++;
@@ -14,8 +14,8 @@ void prepend_to_all(ForwardIterator first, ForwardIterator last,
 } // namespace detail
 
 template <typename ForwardIterator, typename OutputIterator, typename T>
-void intersperse(ForwardIterator first, ForwardIterator last,
-                 OutputIterator d_first, T sep) {
+constexpr void intersperse(ForwardIterator first, ForwardIterator last,
+                           OutputIterator d_first, T sep) {
     if (first == last) {
         return;
     }
