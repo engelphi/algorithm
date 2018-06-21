@@ -3,8 +3,9 @@
 namespace algo {
 template <typename InputIterator, typename OutputIteratorA,
           typename OutputIteratorB, typename Pred>
-void span(InputIterator first, InputIterator last, OutputIteratorA a_first,
-          OutputIteratorB b_first, Pred pred) {
+constexpr void span(InputIterator first, InputIterator last,
+                    OutputIteratorA a_first, OutputIteratorB b_first,
+                    Pred pred) {
     while (first != last) {
         if (pred(*first)) {
             *a_first++ = *first++;
