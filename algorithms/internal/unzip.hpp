@@ -20,8 +20,9 @@ namespace algo {
  */
 template <typename InputIterator, typename OutputIterator1,
           typename OutputIterator2>
-decltype(auto) unzip(InputIterator first, InputIterator last,
-                     OutputIterator1 out1_first, OutputIterator2 out2_first) {
+constexpr decltype(auto) unzip(InputIterator first, InputIterator last,
+                               OutputIterator1 out1_first,
+                               OutputIterator2 out2_first) {
     while (first != last) {
         (*out1_first++) = (*first).first;
         (*out2_first++) = (*first).second;
