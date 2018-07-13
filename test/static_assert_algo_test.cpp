@@ -36,12 +36,6 @@ constexpr inline bool testTransformIfFunction() {
     return res;
 }
 
-TEST_CASE("transform_if works in constexpr context", "[constexpr]") {
-    constexpr bool res = testTransformIfFunction();
-    static_assert(res);
-    REQUIRE(res == true);
-}
-
 //--------------------------------------------------------------------------------------------------
 
 constexpr inline bool testUnzipFunction() {
@@ -66,12 +60,6 @@ constexpr inline bool testUnzipFunction() {
                (expectedB[3] == outB[3]) && (expectedB[4] == outB[4]);
 
     return res;
-}
-
-TEST_CASE("unzip works in constexpr context", "[constexpr]") {
-    constexpr bool res = testUnzipFunction();
-    static_assert(res);
-    REQUIRE(res == true);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -99,12 +87,6 @@ constexpr inline bool testSpanAlgo() {
     return res;
 }
 
-TEST_CASE("span works in constexpr context", "[constexpr]") {
-    constexpr bool res = testSpanAlgo();
-    static_assert(res);
-    REQUIRE(res == true);
-}
-
 //--------------------------------------------------------------------------------------------------
 
 constexpr inline bool testIntersperseAlgo() {
@@ -125,8 +107,30 @@ constexpr inline bool testIntersperseAlgo() {
     return res;
 }
 
-TEST_CASE("intersperse works in constexpr context", "[constexpr]") {
-    constexpr bool res = testIntersperseAlgo();
-    static_assert(res);
-    REQUIRE(res == true);
+//--------------------------------------------------------------------------------------------------
+
+TEST_CASE("constexpr", "[constexpr]") {
+    SECTION("intersperse works in constexpr context") {
+        constexpr bool res = testIntersperseAlgo();
+        static_assert(res);
+        REQUIRE(res == true);
+    }
+
+    SECTION("span works in constexpr context") {
+        constexpr bool res = testSpanAlgo();
+        static_assert(res);
+        REQUIRE(res == true);
+    }
+
+    SECTION("unzip works in constexpr context") {
+        constexpr bool res = testUnzipFunction();
+        static_assert(res);
+        REQUIRE(res == true);
+    }
+
+    SECTION("transform_if works in constexpr context") {
+        constexpr bool res = testTransformIfFunction();
+        static_assert(res);
+        REQUIRE(res == true);
+    }
 }
