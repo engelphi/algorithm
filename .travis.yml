@@ -6,104 +6,83 @@ branches:
   - master
 services:
 - docker
-before_script:
-- docker pull engelphi/docker-cpp-image:latest
 env:
   global:
   - ci_env=`(curl -s https://codecov.io/env) | bash`
   - GIT_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
     else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-matrix:
+jobs:
   include:
-  - os: linux
-    env: STEP=FORMAT_CHECK
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_FORMAT=ON'
-    - docker exec build sh -c 'cd algorithm/build && make format'
-    - docker exec build bash -c 'cd algorithm && rm -r build && [ $(git diff --shortstat
-      | wc -l) == 0 ] && echo "success"'
-  - os: linux
-    env: STEP=DOCUMENTATION_CHECK
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && ls -ahl && doxygen'
-  - os: linux
-    env: STEP=CLANG_TIDY
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_TIDY=ON'
-    - docker exec build sh -c 'cd algorithm/build && make tidy'
-  - os: linux
-    env: STEP=CPPCHECK
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CPP_CHECK=ON'
-    - docker exec build sh -c 'cd algorithm/build && make cppcheck'
-  - os: linux
-    env: STEP=ADDRESS_SANITIZER
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DENABLE_ASAN=ON'
-    - docker exec build sh -c 'cd algorithm/build && make'
-    - docker exec build sh -c 'cd algorithm/build && ASAN_OPTIONS=check_initialization_order=1
-      ./test-algorithm'
-  - os: linux
-    env: STEP=COVERAGE
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON'
-    - docker exec build sh -c 'cd algorithm/build && make algorithm_coverage'
-    - docker exec build sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash
-      > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f
-      lcov.info.cleaned || echo "Codecov did not collect coverage reports"'
-  - os: linux
-    env: STEP=TEST_CLANG
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release'
-    - docker exec build sh -c 'cd algorithm/build && make'
-    - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
-  - os: linux
-    env: STEP=TEST_GCC
-    script:
-    - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name build engelphi/docker-cpp-image
-    - docker exec build git clone https://github.com/engelphi/algorithm.git
-    - docker exec build sh -c 'cd algorithm && git checkout origin/$BRANCH'
-    - docker exec build sh -c 'cd algorithm && mkdir build && cd build && cmake ..
-      -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release'
-    - docker exec build sh -c 'cd algorithm/build && make'
-    - docker exec build sh -c 'cd algorithm/build && ./test-algorithm'
-
-before_deploy:
-  - tar -zcvf algorithm-${TRAVIS_TAG}.tar.gz algorithms 
-
-deploy:
-  provider: releases
-  api_key:
-    secure: PLrNs9q4xXoB6qT1oAZCOYR2gtO+MSEARImi9gxAzeMfLGCmZ5+LhW9MubXVFdPjo5AjZARA6bchTHcCm5UWS9fzsT8Y+KGZ58gTvbq7C6qKl6rlwTSotTnt3qGEX10+yHYWXy+doeKL6ngQqDq+ix6Qwq3U9IM2M+BeQ4lkXymRpaFqr3XH/Be0zF2R6RAk5jtAO7JKMci1nz4yvbwwWXw45nVjsC4nd68PHE9X4On9zUi8jXrnHOBZvAMA99MORRs4qVIqOtgF4UcsGcC3XDuQvh5Fpgw2jB8D4NSoHsBIF5fKSA8HA7HgYNwqU41kDFMmPb8ruSpKbjNvMtb621rzF+Ctbtue2PjsZOVXcSyvaldHl95aceAqIOmqd8744U9hVbehytUhew8Pe9Ed1hgkS3w1aQen0ckkv3wpmAB1EyvHRhKpbdmbCgKACMgcJ5OdIDy0STfNPxnLxqPG+QMz/fz49qBSpBIrRvxOGDen5TwAvgGk3T4Fs1doVQxAKtpLMdu/blhiI1VfYu0xbpW2qY9ylCxpWHEoTVtKVnIrCDBsimeWKwAGwywKVPjpoUkjv8n91dNJbe9KlnQboocZ9PNFaylNmuGo/u1ZCmyFTLKhjg2w6EtVz+L+79lxytkvbbTk9I+7omAwMf19TeN9t2HF76V6UXIt1PjhM5o=
-  file: algorithm-${TRAVIS_TAG}.tar.gz
-  skip_cleanup: true
-  on:
-    tags: true
-    repo: engelphi/algorithm
+    - stage: pull docker build image
+      script: 'docker pull engelphi/docker-cpp-image'
+    - stage: code Linting
+      script:
+      - export STEP="FORMAT_CHECK"
+      - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+      - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+      - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+      - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_FORMAT=ON'
+      - docker exec $STEP sh -c 'cd algorithm/build && make format'
+      - docker exec $STEP bash -c 'cd algorithm && rm -r build && [ $(git diff --shortstat | wc -l) == 0 ] && echo "success"'
+      - docker rm -f $STEP
+      - script:
+        - export STEP="DOCUMENTATION_CHECK"
+        - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+        - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+        - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+        - docker exec $STEP sh -c 'cd algorithm && ls -ahl && doxygen'
+        - docker rm -f $STEP
+      - script:
+        - export STEP="CLANG_TIDY_CHECK"
+        - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+        - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+        - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+        - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CLANG_TIDY=ON'
+        - docker exec $STEP sh -c 'cd algorithm/build && make tidy'
+        - docker rm -f $STEP
+      - script:
+        - export STEP="CPPCHECK"
+        - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+        - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+        - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+        - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_CPP_CHECK=ON'
+        - docker exec $STEP sh -c 'cd algorithm/build && make cppcheck'
+        - docker rm -f $STEP
+    - stage: Dynamic Analysis
+      script:
+      - export STEP="ADDRESS_SANITIZER"
+      - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+      - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+      - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+      - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DENABLE_ASAN=ON'
+      - docker exec $STEP sh -c 'cd algorithm/build && make'
+      - docker exec $STEP sh -c 'cd algorithm/build && ASAN_OPTIONS=check_initialization_order=1:detect_leaks=1 ./test-algorithm'
+      - docker rm -f $STEP
+    - stage: Test
+      script: 
+      - export STEP="COVERAGE"
+      - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+      - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+      - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+      - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON'
+      - docker exec $STEP sh -c 'cd algorithm/build && make algorithm_coverage'
+      - docker exec $STEP sh -c 'cd algorithm/build && $(curl -s https://codecov.io/bash > codecov.sh) && chmod +x codecov.sh && ./codecov.sh -X gcov -s coverage -f lcov.info.cleaned || echo "Codecov did not collect coverage reports"'
+      - docker rm -f $STEP
+      - script:
+        - export STEP="TEST_CLANG"
+        - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+        - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+        - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+        - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release'
+        - docker exec $STEP sh -c 'cd algorithm/build && make'
+        - docker exec $STEP sh -c 'cd algorithm/build && ./test-algorithm'
+        - docker rm -f $STEP
+      - script:
+        - export STEP="TEST_GCC"
+        - docker run $ci_env -e BRANCH=$GIT_BRANCH -itd --name $STEP engelphi/docker-cpp-image
+        - docker exec $STEP git clone https://github.com/engelphi/algorithm.git
+        - docker exec $STEP sh -c 'cd algorithm && git checkout origin/$BRANCH'
+        - docker exec $STEP sh -c 'cd algorithm && mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release'
+        - docker exec $STEP sh -c 'cd algorithm/build && make'
+        - docker exec $STEP sh -c 'cd algorithm/build && ./test-algorithm'
+        - docker rm -f $STEP
