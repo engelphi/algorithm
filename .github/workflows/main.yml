@@ -16,5 +16,7 @@ jobs:
         mkdir build
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Debug 
-    - name: Build and Run Tests
-      run: cmake --build build --target test-algorithm test
+    - name: Build Tests
+      run: cmake --build build --target test-algorithm
+    - name: Run Tests
+      run: cmake --build build --target test
