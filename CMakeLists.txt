@@ -161,4 +161,7 @@ target_link_libraries(test-algorithm
   Catch
 )
 
+enable_testing()
+add_test(NAME unit COMMAND test-algorithm)
+
 install (TARGETS test-algorithm DESTINATION bin)
