@@ -12,6 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Configure Buildsystem
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug 
-    - name: Build and Run Tests
-      run: cmake --build build --target test-algorithm test
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Debug 
+    - name: Build Tests
+      run: cmake --build build --target test-algorithm
+    - name: Run Tests
+      run: cmake --build build --target test
