@@ -19,5 +19,5 @@ jobs:
     - name: Build Tests
       run: cmake --build build --target test-algorithm
     - name: Run Tests
-      run: build/test-algorithm
+      run: $GITHUB_WORKSPACE/algorithm/build/test-algorithm
       shell: bash
