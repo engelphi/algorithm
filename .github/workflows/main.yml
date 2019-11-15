@@ -19,4 +19,4 @@ jobs:
     - name: Build Tests
       run: cmake --build build --target test-algorithm
     - name: Run Tests
-      run: cmake --build build --target test
+      run: build/test-algorithm
