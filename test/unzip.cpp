@@ -1,6 +1,6 @@
 #include <internal/unzip.hpp>
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 #include <deque>
 #include <forward_list>
@@ -168,4 +168,3 @@ TEST_CASE("unzip", "[unzip]") {
         }
     }
 }
-

@@ -1,6 +1,6 @@
 #include <internal/transform_if.hpp>
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 #include <deque>
 #include <forward_list>
@@ -13,9 +13,10 @@ TEST_CASE("transform_if", "[transform_if]") {
         SECTION("(vector)") {
             std::vector<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::vector<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(), elems.begin(),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), elems.begin(),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == elems);
         }
@@ -23,9 +24,10 @@ TEST_CASE("transform_if", "[transform_if]") {
         SECTION("(deque)") {
             std::deque<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::deque<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(), elems.begin(),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), elems.begin(),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == elems);
         }
@@ -33,9 +35,10 @@ TEST_CASE("transform_if", "[transform_if]") {
         SECTION("(list)") {
             std::list<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::list<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(), elems.begin(),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), elems.begin(),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == elems);
         }
@@ -44,9 +47,10 @@ TEST_CASE("transform_if", "[transform_if]") {
             std::forward_list<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::forward_list<int> expected_result{2, 2, 4, 4,  6,
                                                    6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(), elems.begin(),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), elems.begin(),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == elems);
         }
@@ -57,10 +61,10 @@ TEST_CASE("transform_if", "[transform_if]") {
             std::vector<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::vector<int> result{};
             std::vector<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(),
-                               std::back_inserter(result),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), std::back_inserter(result),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == result);
         }
@@ -69,10 +73,10 @@ TEST_CASE("transform_if", "[transform_if]") {
             std::deque<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::deque<int> result{};
             std::deque<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(),
-                               std::back_inserter(result),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), std::back_inserter(result),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == result);
         }
@@ -81,10 +85,10 @@ TEST_CASE("transform_if", "[transform_if]") {
             std::list<int> elems{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             std::list<int> result{};
             std::list<int> expected_result{2, 2, 4, 4, 6, 6, 8, 8, 10, 10};
-            algo::transform_if(elems.begin(), elems.end(),
-                               std::back_inserter(result),
-                               [](int &elem) { return elem + 1; },
-                               [](const int &elem) { return (elem % 2) != 0; });
+            algo::transform_if(
+                elems.begin(), elems.end(), std::back_inserter(result),
+                [](int &elem) { return elem + 1; },
+                [](const int &elem) { return (elem % 2) != 0; });
 
             REQUIRE(expected_result == result);
         }

@@ -144,14 +144,19 @@ endif()
 
 
 find_package (Threads REQUIRED)
-include (ExternalProject)
+include(FetchContent)
 
-set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch)
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY  https://github.com/catchorg/Catch2
+  GIT_TAG         v2.13.10
+)
+
+FetchContent_MakeAvailable(Catch2)
+
 set(ALGORITHMS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/algorithms)
 add_library (algorithm INTERFACE)
-add_library(Catch INTERFACE)
 target_include_directories (algorithm INTERFACE ${ALGORITHMS_INCLUDE_DIR})
-target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 file (GLOB SRCS test/*.cpp)
 add_executable(test-algorithm ${SRCS})
@@ -165,7 +170,7 @@ target_compile_options(test-algorithm PRIVATE
 
 target_link_libraries(test-algorithm
   algorithm
-  Catch
+  Catch2::Catch2
 )
 
 enable_testing()

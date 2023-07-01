@@ -1,4 +1,4 @@
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <deque>
 #include <internal/zip_n.hpp>
 #include <list>
