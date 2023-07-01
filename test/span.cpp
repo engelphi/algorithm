@@ -1,4 +1,4 @@
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <internal/span.hpp>
 
 #include <array>
@@ -203,4 +203,3 @@ TEST_CASE("span", "[span]") {
         }
     }
 }
-

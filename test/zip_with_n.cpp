@@ -1,5 +1,5 @@
 #include <array>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <deque>
 #include <forward_list>
 #include <internal/zip_with_n.hpp>

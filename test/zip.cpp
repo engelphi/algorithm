@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <array>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <deque>
 #include <forward_list>
 #include <internal/zip.hpp>
 #include <list>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 TEST_CASE("zip", "[zip]") {
     SECTION("zip should zip elements of two vectors") {
@@ -67,4 +67,3 @@ TEST_CASE("zip", "[zip]") {
         REQUIRE(expected_result == result);
     }
 }
-
